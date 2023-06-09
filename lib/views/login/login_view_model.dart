@@ -3,11 +3,9 @@ import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
 import 'package:smart_school_bus/enums/snackbar_type.dart';
 import 'package:smart_school_bus/services/authentication_service.dart';
+import 'package:smart_school_bus/utils/is_email_valid.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
-
-final RegExp emailRegex = RegExp(
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
 class LoginViewModel extends BaseViewModel {
   final NavigationService _navigationService = getIt<NavigationService>();
@@ -19,9 +17,7 @@ class LoginViewModel extends BaseViewModel {
 
   String email = '', password = '';
 
-  bool isValidEmail(String email) {
-    return emailRegex.hasMatch(email);
-  }
+  bool Function(String) isValidEmailFn = isValidEmail;
 
   Future<void> gotoSignUpView() async {
     await navigateAndReplace(Routes.signUpView);
@@ -39,7 +35,7 @@ class LoginViewModel extends BaseViewModel {
       _navigationService.clearStackAndShow(Routes.homeView);
     } catch (err) {
       _snackbarService.showCustomSnackBar(
-        message: err.toString(),
+        message: err.toString().split(']').last,
         variant: SnackbarType.error,
         duration: const Duration(seconds: 5),
       );

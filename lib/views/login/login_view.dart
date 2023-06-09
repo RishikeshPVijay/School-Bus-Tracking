@@ -38,7 +38,7 @@ class LoginView extends StatelessWidget {
                           hintText: 'Email',
                         ),
                         validator: (value) {
-                          if (value!.isEmpty || !model.isValidEmail(value)) {
+                          if (value!.isEmpty || !model.isValidEmailFn(value)) {
                             return 'Email is not valid';
                           }
                           return null;
