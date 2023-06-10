@@ -67,6 +67,6 @@ class AuthenticationService {
 
   Future<void> logout() async {
     _firebaseAuth.signOut();
-    _navigationService.clearStackAndShow(Routes.homeView);
+    _navigationService.clearStackAndShow(Routes.loginView);
   }
 }

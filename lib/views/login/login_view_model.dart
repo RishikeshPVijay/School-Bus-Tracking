@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
@@ -16,6 +17,7 @@ class LoginViewModel extends BaseViewModel {
   final GlobalKey<FormState> loginFormKey = GlobalKey();
 
   String email = '', password = '';
+  bool isLogginIn = false;
 
   bool Function(String) isValidEmailFn = isValidEmail;
 
@@ -30,10 +32,15 @@ class LoginViewModel extends BaseViewModel {
   void login() async {
     try {
       if (!loginFormKey.currentState!.validate()) return;
+      isLogginIn = true;
+      notifyListeners();
       loginFormKey.currentState!.save();
-      await _authenticationService.login(email.trim(), password.trim());
+      UserCredential authRes =
+          await _authenticationService.login(email.trim(), password.trim());
       _navigationService.clearStackAndShow(Routes.homeView);
     } catch (err) {
+      isLogginIn = false;
+      notifyListeners();
       _snackbarService.showCustomSnackBar(
         message: err.toString().split(']').last,
         variant: SnackbarType.error,

@@ -1,6 +1,8 @@
 import 'package:smart_school_bus/views/home/home_view.dart';
+import 'package:smart_school_bus/views/initial_route_view/initial_route_view.dart';
 import 'package:smart_school_bus/views/login/login_view.dart';
 import 'package:smart_school_bus/views/sign_up/sign_up_view.dart';
+import 'package:smart_school_bus/views/map/map_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 @StackedApp(
@@ -14,6 +16,12 @@ import 'package:stacked/stacked_annotations.dart';
     ),
     MaterialRoute(
       page: HomeView,
+    ),
+    MaterialRoute(
+      page: InitialRouteView,
+    ),
+    MaterialRoute(
+      page: MapView,
     ),
   ],
 )

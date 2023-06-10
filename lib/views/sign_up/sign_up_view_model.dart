@@ -22,12 +22,13 @@ class SignUpViewModel extends BaseViewModel {
 
   void setUserType(UserType? userType) {
     this.userType = userType;
-    notifyListeners();
   }
 
   bool Function(String) isValidEmailFn = isValidEmail;
 
   bool isNameValid(String name) => name.split(' ').length > 1;
+
+  bool isSigningUp = false;
 
   Future<void> gotoLoginView() async {
     await _navigationService.replaceWith(Routes.loginView);
@@ -36,6 +37,9 @@ class SignUpViewModel extends BaseViewModel {
   void signup() async {
     try {
       if (!signupFormKey.currentState!.validate()) return;
+      isSigningUp = true;
+      notifyListeners();
+
       signupFormKey.currentState!.save();
       final UserCredential authRes =
           await _authenticationService.signup(email.trim(), password.trim());
@@ -49,6 +53,8 @@ class SignUpViewModel extends BaseViewModel {
       });
       _navigationService.clearStackAndShow(Routes.homeView);
     } catch (err) {
+      isSigningUp = false;
+      notifyListeners();
       _snackbarService.showCustomSnackBar(
         message: err.toString().split(']').last,
         variant: SnackbarType.error,

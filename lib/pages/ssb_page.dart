@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SMBPage extends StatelessWidget {
+class SSBPage extends StatelessWidget {
   final Widget body;
   final AppBar? appBar;
 
-  const SMBPage({Key? key, required this.body, this.appBar}) : super(key: key);
+  const SSBPage({Key? key, required this.body, this.appBar}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

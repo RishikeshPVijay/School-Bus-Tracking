@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_school_bus/enums/user_type.dart';
 import 'package:smart_school_bus/extensions/string_extensions.dart';
-import 'package:smart_school_bus/pages/smb_page.dart';
+import 'package:smart_school_bus/pages/ssb_page.dart';
 import 'package:smart_school_bus/views/sign_up/sign_up_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -10,160 +10,186 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double _height = MediaQuery.of(context).size.height;
+
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => SignUpViewModel(),
       builder: (context, model, ch) {
-        return SMBPage(
-          body: Form(
-            key: model.signupFormKey,
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Create Account',
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      const SizedBox(
-                        height: 48.0,
-                      ),
-                      TextFormField(
-                        key: const ValueKey('name'),
-                        decoration: const InputDecoration(
-                          hintText: 'Name',
+        return SSBPage(
+          body: SingleChildScrollView(
+            child: Form(
+              key: model.signupFormKey,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: _height),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: _height * 0.15,
                         ),
-                        onSaved: (value) {
-                          model.name = value!;
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty || model.isNameValid(value)) {
-                            return 'Name must have a first_name and last_name';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 28.0,
-                      ),
-                      TextFormField(
-                        key: const ValueKey('email'),
-                        onSaved: (value) {
-                          model.email = value!;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
+                        Text(
+                          'Create Account',
+                          style: Theme.of(context).textTheme.headlineLarge,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty || !model.isValidEmailFn(value)) {
-                            return 'Email is not valid';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 28.0,
-                      ),
-                      TextFormField(
-                        key: const ValueKey('password'),
-                        onSaved: (value) {
-                          model.password = value!;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: 'Password',
+                        const SizedBox(
+                          height: 48.0,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty || value.length < 7) {
-                            return 'Password must be 7 character long';
-                          }
-                          return null;
-                        },
-                        obscureText: true,
-                      ),
-                      const SizedBox(
-                        height: 28.0,
-                      ),
-                      FormField(
-                        builder: (FormFieldState<bool> state) {
-                          return Column(
-                            children: [
-                              ButtonBar(
-                                alignment: MainAxisAlignment.center,
-                                children: UserType.values
-                                    .map(
-                                      (type) => Row(
-                                        children: [
-                                          Radio(
-                                            value: type,
-                                            groupValue: model.userType,
-                                            onChanged: model.setUserType,
-                                          ),
-                                          Text(type
-                                              .toShortString()
-                                              .capitalize()),
-                                        ],
+                        TextFormField(
+                          key: const ValueKey('name'),
+                          decoration: const InputDecoration(
+                            hintText: 'Name',
+                          ),
+                          onSaved: (value) {
+                            model.name = value!;
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty || !model.isNameValid(value)) {
+                              return 'Name must have a first_name and last_name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 28.0,
+                        ),
+                        TextFormField(
+                          key: const ValueKey('email'),
+                          onSaved: (value) {
+                            model.email = value!;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Email',
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty ||
+                                !model.isValidEmailFn(value)) {
+                              return 'Email is not valid';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 28.0,
+                        ),
+                        TextFormField(
+                          key: const ValueKey('password'),
+                          onSaved: (value) {
+                            model.password = value!;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Password',
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty || value.length < 7) {
+                              return 'Password must be 7 character long';
+                            }
+                            return null;
+                          },
+                          obscureText: true,
+                        ),
+                        const SizedBox(
+                          height: 28.0,
+                        ),
+                        FormField(
+                          builder: (FormFieldState<UserType> state) {
+                            return Column(
+                              children: [
+                                ButtonBar(
+                                  alignment: MainAxisAlignment.center,
+                                  children: UserType.values
+                                      .map(
+                                        (type) => Row(
+                                          children: [
+                                            Radio(
+                                                value: type,
+                                                groupValue: model.userType,
+                                                onChanged: (value) {
+                                                  model.setUserType(value);
+                                                  state.didChange(value);
+                                                }),
+                                            Text(
+                                              type.toShortString().capitalize(),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                                if (state.hasError)
+                                  Text(
+                                    state.errorText!,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                                  )
+                              ],
+                            );
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Usertype is required';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 36.0,
+                        ),
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: model.isSigningUp ? () {} : model.signup,
+                            child: model.isSigningUp
+                                ? const SizedBox(
+                                    height: 20.0,
+                                    width: 20.0,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Sign Up'),
+                                      SizedBox(
+                                        width: 12.0,
                                       ),
-                                    )
-                                    .toList(),
-                              ),
-                              if (state.hasError)
-                                Text(
-                                  state.errorText!,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
+                                      Icon(Icons.arrow_forward)
+                                    ],
                                   ),
-                                )
-                            ],
-                          );
-                        },
-                        validator: (value) {
-                          if (value != true) {
-                            print(value);
-                            return 'Usertype is required';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 36.0,
-                      ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          onPressed: model.signup,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('Sign Up'),
-                              SizedBox(
-                                width: 12.0,
-                              ),
-                              Icon(Icons.arrow_forward)
-                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    TextButton(
-                      onPressed: model.gotoLoginView,
-                      child: const Text('Login'),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Already have an account?'),
+                            TextButton(
+                              onPressed: model.gotoLoginView,
+                              child: const Text('Login'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-              ],
+              ),
             ),
           ),
         );
