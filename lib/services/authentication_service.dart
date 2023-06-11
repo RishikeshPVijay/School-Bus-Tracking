@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
@@ -6,13 +7,13 @@ import 'package:stacked_services/stacked_services.dart';
 class AuthenticationService {
   final NavigationService _navigationService = getIt<NavigationService>();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
 
   Future<bool> isUserLoggedIn() async {
     try {
       var user = _firebaseAuth.currentUser;
       return user != null;
     } catch (e) {
-      print(e);
       throw 'Unknown error';
     }
   }
@@ -22,9 +23,15 @@ class AuthenticationService {
       var user = _firebaseAuth.currentUser;
       return user;
     } catch (e) {
-      print(e);
       throw 'Unknown error';
     }
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUserStream() {
+    return _firestoreInstance
+        .collection('users')
+        .doc(_firebaseAuth.currentUser!.uid)
+        .snapshots();
   }
 
   Future<UserCredential> login(String email, String password) async {
@@ -41,7 +48,6 @@ class AuthenticationService {
       }
       throw msg;
     } catch (e) {
-      print(e);
       throw 'Unknown error';
     }
   }
@@ -60,7 +66,6 @@ class AuthenticationService {
       }
       throw msg;
     } catch (e) {
-      print(e);
       throw 'Unknown error';
     }
   }

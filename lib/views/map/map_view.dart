@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:smart_school_bus/pages/ssb_dashboard_page.dart';
+import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
 import 'package:smart_school_bus/views/map/map_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -12,10 +12,10 @@ class MapView extends StatelessWidget {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MapViewModel(),
       builder: (context, model, child) {
-        return SSBDashboardPage(
+        return SSBDashboardPageWithUser(
           isPadded: false,
           appBarTitle: 'Bus Location',
-          body: ConstrainedBox(
+          builder: (user) => ConstrainedBox(
             constraints:
                 BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             child: GoogleMap(

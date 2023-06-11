@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
@@ -35,8 +34,7 @@ class LoginViewModel extends BaseViewModel {
       isLogginIn = true;
       notifyListeners();
       loginFormKey.currentState!.save();
-      UserCredential authRes =
-          await _authenticationService.login(email.trim(), password.trim());
+      await _authenticationService.login(email.trim(), password.trim());
       _navigationService.clearStackAndShow(Routes.homeView);
     } catch (err) {
       isLogginIn = false;

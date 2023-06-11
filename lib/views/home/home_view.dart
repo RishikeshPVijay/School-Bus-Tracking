@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_school_bus/enums/user_type.dart';
-import 'package:smart_school_bus/pages/ssb_dashboard_page.dart';
-import 'package:smart_school_bus/pages/ssb_page.dart';
+import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
 import 'package:smart_school_bus/views/home/home_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,73 +11,59 @@ class HomeView extends StatelessWidget {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => HomeViewModel(),
       builder: (context, model, child) {
-        return StreamBuilder<DocumentSnapshot>(
-          stream: model.stream,
-          builder: (context, userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.waiting ||
-                !userSnapshot.hasData) {
-              return SSBPage(
-                body: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(
-                      Theme.of(context).primaryColor,
+        return SSBDashboardPageWithUser(
+          // appBarTitle: "Hello, ${userData?['name']}",
+          appBarTitle: 'Smart School Bus',
+          builder: (user) => Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Card(
+              elevation: 2,
+              clipBehavior: Clip.hardEdge,
+              child: Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  shrinkWrap: true,
+                  children: [
+                    // if (isAdmin)
+                    getGridItem(
+                      title: 'Map',
+                      color: const Color.fromRGBO(237, 193, 196, 1.0),
+                      assetImage: const AssetImage('images/maps.png'),
+                      onTap: () {
+                        model.navigateToMapsView();
+                      },
                     ),
-                  ),
-                ),
-              );
-            }
-            final userData = userSnapshot.data;
-            String userType = userData?['user_type'];
-            bool isAdmin = userType == UserType.admin.toShortString();
-            bool isDriver = userType == UserType.driver.toShortString();
-            bool isParent = userType == UserType.parent.toShortString();
-            return SSBDashboardPage(
-              // appBarTitle: "Hello, ${userData?['name']}",
-              appBarTitle: 'Smart School Bus',
-              body: Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Card(
-                  elevation: 2,
-                  clipBehavior: Clip.hardEdge,
-                  child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: GridView.count(
-                      crossAxisCount: 3,
-                      shrinkWrap: true,
-                      children: [
-                        // if (isAdmin)
-                        getGridItem(
-                          title: 'Map',
-                          color: const Color.fromRGBO(237, 193, 196, 1.0),
-                          assetImage: const AssetImage('images/maps.png'),
-                          onTap: () {
-                            model.navigateToMapsView();
-                          },
-                        ),
-                        getGridItem(
-                          title: 'Bus',
-                          color: const Color.fromRGBO(243, 235, 188, 1.0),
-                          assetImage: const AssetImage('images/bus.png'),
-                          onTap: () {
-                            model.navigateToMapsView();
-                          },
-                        ),
-                        getGridItem(
-                          title: 'Driver',
-                          color: const Color.fromRGBO(254, 202, 172, 1.0),
-                          assetImage: const AssetImage('images/driver.png'),
-                          onTap: () {
-                            model.navigateToMapsView();
-                          },
-                        ),
-                      ],
+                    getGridItem(
+                      title: 'Bus',
+                      color: const Color.fromRGBO(243, 235, 188, 1.0),
+                      assetImage: const AssetImage('images/bus.png'),
+                      onTap: () {
+                        model.navigateToBusView();
+                      },
                     ),
-                  ),
+                    // getGridItem(
+                    //   title: 'Driver',
+                    //   color: const Color.fromRGBO(254, 202, 172, 1.0),
+                    //   assetImage: const AssetImage('images/driver.png'),
+                    //   onTap: () {
+                    //     model.navigateToMapsView();
+                    //   },
+                    // ),
+                    getGridItem(
+                      title: 'Student',
+                      color: const Color.fromRGBO(197, 233, 255, 1.0),
+                      assetImage: const AssetImage('images/student.png'),
+                      onTap: () {
+                        model.navigateToMapsView();
+                      },
+                    ),
+                  ],
                 ),
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );

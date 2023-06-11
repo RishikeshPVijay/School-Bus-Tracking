@@ -10,7 +10,7 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _height = MediaQuery.of(context).size.height;
+    final double height = MediaQuery.of(context).size.height;
 
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => SignUpViewModel(),
@@ -20,7 +20,7 @@ class SignUpView extends StatelessWidget {
             child: Form(
               key: model.signupFormKey,
               child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: _height),
+                constraints: BoxConstraints(minHeight: height),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -29,7 +29,7 @@ class SignUpView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: _height * 0.15,
+                          height: height * 0.15,
                         ),
                         Text(
                           'Create Account',
