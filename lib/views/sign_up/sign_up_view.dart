@@ -147,6 +147,7 @@ class SignUpView extends StatelessWidget {
                             loading: model.isSigningUp,
                             onPressed: model.signup,
                             text: 'Sign Up',
+                            trailingIcon: Icons.arrow_forward,
                           ),
                         ),
                       ],

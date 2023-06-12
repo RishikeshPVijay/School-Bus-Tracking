@@ -48,6 +48,7 @@ class SignUpViewModel extends BaseViewModel {
           .collection(FireStoreCollections.users)
           .doc(authRes.user!.uid)
           .set({
+        'id': authRes.user!.uid,
         'name': name,
         'email': email,
         'user_type': userType!.toShortString(),

@@ -1,34 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_school_bus/models/bus.dart';
+import 'package:smart_school_bus/models/student.dart';
 import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
-import 'package:smart_school_bus/views/bus_view/bus_view_model.dart';
+import 'package:smart_school_bus/views/student_view/student_view_model.dart';
 import 'package:stacked/stacked.dart';
 
-class BusView extends StatelessWidget {
-  const BusView({super.key});
+class StudentView extends StatelessWidget {
+  const StudentView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SSBDashboardPageWithUser(
-      appBarTitle: 'Bus',
-      isPadded: false,
+      appBarTitle: 'Student',
       builder: (user) {
         return ViewModelBuilder.reactive(
           onViewModelReady: (viewModel) => viewModel.user = user,
-          viewModelBuilder: () => BusViewModel(),
+          viewModelBuilder: () => StudentViewModel(),
           builder: (context, viewModel, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextButton(
-                  onPressed: viewModel.navigateToAddBusView,
+                  onPressed: viewModel.navigateToAddStudentView,
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.add, size: 20.0),
                       Text(
-                        'Add bus',
+                        'Add Student',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16.0,
@@ -70,18 +69,22 @@ Widget getTable(Stream<QuerySnapshot<Map<String, dynamic>>>? stream) {
         child: DataTable(
           columns: const [
             DataColumn(label: Text('ID')),
-            DataColumn(label: Text('Bus No')),
-            DataColumn(label: Text('Driver')),
-            DataColumn(label: Text('Route'))
+            DataColumn(label: Text('Name')),
+            DataColumn(label: Text('Class')),
+            DataColumn(label: Text('Bus')),
+            DataColumn(label: Text('Ad No')),
+            DataColumn(label: Text('Address')),
           ],
           rows: data.map((doc) {
-            Bus bus = Bus.fromFirestore(doc.data());
+            Student student = Student.fromFirestore(doc.data());
             return DataRow(
               cells: [
-                DataCell(Text(bus.id)),
-                DataCell(Text(bus.busNo)),
-                DataCell(Text(bus.driver)),
-                DataCell(Text(bus.route)),
+                DataCell(Text(student.id)),
+                DataCell(Text(student.name)),
+                DataCell(Text(student.cls)),
+                DataCell(Text(student.busId)),
+                DataCell(Text(student.admissionNumber)),
+                DataCell(Text(student.address)),
               ],
             );
           }).toList(),

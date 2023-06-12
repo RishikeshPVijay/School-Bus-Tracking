@@ -56,7 +56,7 @@ class HomeView extends StatelessWidget {
                       color: const Color.fromRGBO(197, 233, 255, 1.0),
                       assetImage: const AssetImage('images/student.png'),
                       onTap: () {
-                        model.navigateToMapsView();
+                        model.navigateToStudentView();
                       },
                     ),
                   ],

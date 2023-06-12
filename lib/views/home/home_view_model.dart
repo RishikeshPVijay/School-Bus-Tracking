@@ -10,6 +10,7 @@ class HomeViewModel extends BaseViewModel {
 
   void navigateToMapsView() => _navigate(Routes.mapView);
   void navigateToBusView() => _navigate(Routes.busView);
+  void navigateToStudentView() => _navigate(Routes.studentView);
 
   Future<void> _navigate(String viewName) async {
     await _navigationService.navigateTo(viewName);

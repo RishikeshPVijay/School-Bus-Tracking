@@ -1,6 +1,6 @@
 class Student {
-  final int id;
-  final int busId;
+  final String id;
+  final String busId;
   final String name;
   final String cls;
   final String admissionNumber;
@@ -14,4 +14,12 @@ class Student {
     required this.admissionNumber,
     required this.address,
   });
+
+  Student.fromFirestore(Map<String, dynamic> json)
+      : id = json['id'],
+        busId = json['busId'],
+        name = json['name'],
+        admissionNumber = json['admissionNumber'],
+        address = json['address'],
+        cls = json['cls'];
 }

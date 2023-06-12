@@ -84,6 +84,7 @@ class SSBDashboardPageWithUser extends StatelessWidget {
 
           final userData = userSnapshot.data;
           SSBUser user = SSBUser(
+            id: userData?['id'],
             name: userData?['name'],
             email: userData?['email'],
             userType:
