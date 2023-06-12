@@ -5,6 +5,7 @@ import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
 import 'package:smart_school_bus/enums/snackbar_type.dart';
 import 'package:smart_school_bus/enums/user_type.dart';
+import 'package:smart_school_bus/models/firestore_collections.dart';
 import 'package:smart_school_bus/services/authentication_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -44,7 +45,7 @@ class SignUpViewModel extends BaseViewModel {
       final UserCredential authRes =
           await _authenticationService.signup(email.trim(), password.trim());
       await FirebaseFirestore.instance
-          .collection('users')
+          .collection(FireStoreCollections.users)
           .doc(authRes.user!.uid)
           .set({
         'name': name,

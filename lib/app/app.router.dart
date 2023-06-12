@@ -5,9 +5,9 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i8;
+import 'package:flutter/material.dart' as _i9;
 import 'package:flutter/material.dart';
-import 'package:smart_school_bus/enums/user_type.dart' as _i9;
+import 'package:smart_school_bus/views/bus_view/add_bus_view.dart' as _i8;
 import 'package:smart_school_bus/views/bus_view/bus_view.dart' as _i7;
 import 'package:smart_school_bus/views/home/home_view.dart' as _i4;
 import 'package:smart_school_bus/views/initial_route_view/initial_route_view.dart'
@@ -31,6 +31,8 @@ class Routes {
 
   static const busView = '/bus-view';
 
+  static const addBusView = '/add-bus-view';
+
   static const all = <String>{
     loginView,
     signUpView,
@@ -38,6 +40,7 @@ class Routes {
     initialRouteView,
     mapView,
     busView,
+    addBusView,
   };
 }
 
@@ -67,44 +70,52 @@ class StackedRouter extends _i1.RouterBase {
       Routes.busView,
       page: _i7.BusView,
     ),
+    _i1.RouteDef(
+      Routes.addBusView,
+      page: _i8.AddBusView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
     _i2.LoginView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.LoginView(),
         settings: data,
       );
     },
     _i3.SignUpView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i3.SignUpView(),
         settings: data,
       );
     },
     _i4.HomeView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i4.HomeView(),
         settings: data,
       );
     },
     _i5.InitialRouteView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i5.InitialRouteView(),
         settings: data,
       );
     },
     _i6.MapView: (data) {
-      return _i8.MaterialPageRoute<dynamic>(
+      return _i9.MaterialPageRoute<dynamic>(
         builder: (context) => const _i6.MapView(),
         settings: data,
       );
     },
     _i7.BusView: (data) {
-      final args = data.getArgs<BusViewArguments>(nullOk: false);
-      return _i8.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i7.BusView(key: args.key, userType: args.userType),
+      return _i9.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i7.BusView(),
+        settings: data,
+      );
+    },
+    _i8.AddBusView: (data) {
+      return _i9.MaterialPageRoute<dynamic>(
+        builder: (context) => const _i8.AddBusView(),
         settings: data,
       );
     },
@@ -114,33 +125,6 @@ class StackedRouter extends _i1.RouterBase {
   List<_i1.RouteDef> get routes => _routes;
   @override
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
-}
-
-class BusViewArguments {
-  const BusViewArguments({
-    this.key,
-    required this.userType,
-  });
-
-  final _i8.Key? key;
-
-  final _i9.UserType userType;
-
-  @override
-  String toString() {
-    return '{"key": "$key", "userType": "$userType"}';
-  }
-
-  @override
-  bool operator ==(covariant BusViewArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key && other.userType == userType;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode ^ userType.hashCode;
-  }
 }
 
 extension NavigatorStateExtension on _i10.NavigationService {
@@ -214,17 +198,28 @@ extension NavigatorStateExtension on _i10.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToBusView({
-    _i8.Key? key,
-    required _i9.UserType userType,
+  Future<dynamic> navigateToBusView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return navigateTo<dynamic>(Routes.busView,
-        arguments: BusViewArguments(key: key, userType: userType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddBusView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.addBusView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -301,17 +296,28 @@ extension NavigatorStateExtension on _i10.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithBusView({
-    _i8.Key? key,
-    required _i9.UserType userType,
+  Future<dynamic> replaceWithBusView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  }) async {
+  ]) async {
     return replaceWith<dynamic>(Routes.busView,
-        arguments: BusViewArguments(key: key, userType: userType),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddBusView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.addBusView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

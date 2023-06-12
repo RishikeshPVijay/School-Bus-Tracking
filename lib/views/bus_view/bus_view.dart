@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_school_bus/enums/user_type.dart';
+import 'package:smart_school_bus/models/bus.dart';
 import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
 import 'package:smart_school_bus/views/bus_view/bus_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class BusView extends StatelessWidget {
-  const BusView({super.key, required this.userType});
-
-  final UserType userType;
+  const BusView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +16,13 @@ class BusView extends StatelessWidget {
       builder: (user) {
         return ViewModelBuilder.reactive(
           onViewModelReady: (viewModel) => viewModel.user = user,
-          viewModelBuilder: () => BusViewModle(),
+          viewModelBuilder: () => BusViewModel(),
           builder: (context, viewModel, child) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: viewModel.navigateToAddBusView,
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -67,28 +65,27 @@ Widget getTable(Stream<QuerySnapshot<Map<String, dynamic>>>? stream) {
       if (data == null || data.isEmpty) {
         return Container();
       }
-      return DataTable(
-        columns: const [
-          DataColumn(label: Text('Bus ID')),
-          DataColumn(label: Text('Driver name')),
-          DataColumn(label: Text('Stops'))
-        ],
-        rows: const [
-          DataRow(
-            cells: [
-              DataCell(Text('#100')),
-              DataCell(Text('Flutter Basics')),
-              DataCell(Text('David John'))
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('#101')),
-              DataCell(Text('Dart Internals')),
-              DataCell(Text('Alex Wick'))
-            ],
-          )
-        ],
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: const [
+            DataColumn(label: Text('ID')),
+            DataColumn(label: Text('Bus No')),
+            DataColumn(label: Text('Driver')),
+            DataColumn(label: Text('Route'))
+          ],
+          rows: data.map((doc) {
+            Bus bus = Bus.fromFirestore(doc.data());
+            return DataRow(
+              cells: [
+                DataCell(Text(bus.id)),
+                DataCell(Text(bus.busNo)),
+                DataCell(Text(bus.driver)),
+                DataCell(Text(bus.route)),
+              ],
+            );
+          }).toList(),
+        ),
       );
     },
   );

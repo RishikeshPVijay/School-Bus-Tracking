@@ -1,3 +1,4 @@
+import 'package:smart_school_bus/views/bus_view/add_bus_view.dart';
 import 'package:smart_school_bus/views/bus_view/bus_view.dart';
 import 'package:smart_school_bus/views/home/home_view.dart';
 import 'package:smart_school_bus/views/initial_route_view/initial_route_view.dart';
@@ -26,6 +27,9 @@ import 'package:stacked/stacked_annotations.dart';
     ),
     MaterialRoute(
       page: BusView,
+    ),
+    MaterialRoute(
+      page: AddBusView,
     ),
   ],
 )

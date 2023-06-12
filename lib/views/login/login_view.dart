@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_school_bus/pages/ssb_page.dart';
 import 'package:smart_school_bus/views/login/login_view_model.dart';
+import 'package:smart_school_bus/widgets/loader_button.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginView extends StatelessWidget {
@@ -68,27 +69,11 @@ class LoginView extends StatelessWidget {
                       ),
                       Container(
                         alignment: Alignment.centerRight,
-                        child: ElevatedButton(
-                          onPressed: model.isLogginIn ? () {} : model.login,
-                          child: model.isLogginIn
-                              ? const SizedBox(
-                                  height: 20.0,
-                                  width: 20.0,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text('Login'),
-                                    SizedBox(
-                                      width: 12.0,
-                                    ),
-                                    Icon(Icons.arrow_forward)
-                                  ],
-                                ),
+                        child: LoaderButton(
+                          onPressed: model.login,
+                          loading: model.isLogginIn,
+                          text: 'Login',
+                          trailingIcon: Icons.arrow_forward,
                         ),
                       ),
                     ],

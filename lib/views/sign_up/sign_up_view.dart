@@ -3,6 +3,7 @@ import 'package:smart_school_bus/enums/user_type.dart';
 import 'package:smart_school_bus/extensions/string_extensions.dart';
 import 'package:smart_school_bus/pages/ssb_page.dart';
 import 'package:smart_school_bus/views/sign_up/sign_up_view_model.dart';
+import 'package:smart_school_bus/widgets/loader_button.dart';
 import 'package:stacked/stacked.dart';
 
 class SignUpView extends StatelessWidget {
@@ -142,27 +143,10 @@ class SignUpView extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            onPressed: model.isSigningUp ? () {} : model.signup,
-                            child: model.isSigningUp
-                                ? const SizedBox(
-                                    height: 20.0,
-                                    width: 20.0,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : const Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text('Sign Up'),
-                                      SizedBox(
-                                        width: 12.0,
-                                      ),
-                                      Icon(Icons.arrow_forward)
-                                    ],
-                                  ),
+                          child: LoaderButton(
+                            loading: model.isSigningUp,
+                            onPressed: model.signup,
+                            text: 'Sign Up',
                           ),
                         ),
                       ],
