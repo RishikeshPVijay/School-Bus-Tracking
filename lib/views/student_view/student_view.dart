@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_school_bus/enums/user_type.dart';
 import 'package:smart_school_bus/models/student.dart';
 import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
 import 'package:smart_school_bus/views/student_view/student_view_model.dart';
@@ -10,9 +11,13 @@ class StudentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return SSBDashboardPageWithUser(
       appBarTitle: 'Student',
+      isPadded: false,
       builder: (user) {
+        final bool isParent = user.userType == UserType.parent;
+
         return ViewModelBuilder.reactive(
           onViewModelReady: (viewModel) => viewModel.user = user,
           viewModelBuilder: () => StudentViewModel(),
@@ -20,23 +25,24 @@ class StudentView extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextButton(
-                  onPressed: viewModel.navigateToAddStudentView,
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.add, size: 20.0),
-                      Text(
-                        'Add Student',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16.0,
+                if (isParent)
+                  TextButton(
+                    onPressed: viewModel.navigateToAddStudentView,
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.add, size: 20.0),
+                        Text(
+                          'Add Student',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16.0,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                getTable(viewModel.getBusDataStream()),
+                getTable(viewModel.getBusDataStream(), viewModel, screenWidth),
               ],
             );
           },
@@ -46,7 +52,11 @@ class StudentView extends StatelessWidget {
   }
 }
 
-Widget getTable(Stream<QuerySnapshot<Map<String, dynamic>>>? stream) {
+Widget getTable(
+  Stream<QuerySnapshot<Map<String, dynamic>>>? stream,
+  StudentViewModel viewModel,
+  double screenWidth,
+) {
   return StreamBuilder(
     stream: stream,
     builder: (context, snapshot) {
@@ -66,28 +76,61 @@ Widget getTable(Stream<QuerySnapshot<Map<String, dynamic>>>? stream) {
       }
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: DataTable(
-          columns: const [
-            DataColumn(label: Text('ID')),
-            DataColumn(label: Text('Name')),
-            DataColumn(label: Text('Class')),
-            DataColumn(label: Text('Bus')),
-            DataColumn(label: Text('Ad No')),
-            DataColumn(label: Text('Address')),
-          ],
-          rows: data.map((doc) {
-            Student student = Student.fromFirestore(doc.data());
-            return DataRow(
-              cells: [
-                DataCell(Text(student.id)),
-                DataCell(Text(student.name)),
-                DataCell(Text(student.cls)),
-                DataCell(Text(student.busId)),
-                DataCell(Text(student.admissionNumber)),
-                DataCell(Text(student.address)),
-              ],
-            );
-          }).toList(),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: screenWidth),
+          child: DataTable(
+            columnSpacing: 5.0,
+            columns: const [
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Verification')),
+              DataColumn(label: Text('Action')),
+            ],
+            rows: data.map((doc) {
+              Student student = Student.fromFirestore(doc.data());
+              return DataRow(
+                cells: [
+                  DataCell(Text(student.name)),
+                  DataCell(
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: student.rfid != null
+                          ? const Icon(
+                              Icons.verified,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.pending,
+                              color: Colors.redAccent,
+                            ),
+                    ),
+                  ),
+                  DataCell(
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: () => viewModel.handleStudentDelete(student),
+                          child: Icon(
+                            Icons.delete,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.remove_red_eye,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       );
     },

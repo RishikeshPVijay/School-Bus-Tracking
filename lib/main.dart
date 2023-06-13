@@ -66,6 +66,9 @@ class MyApp extends StatelessWidget {
             letterSpacing: 0.7,
           ),
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+        ),
       ),
       initialRoute: Routes.initialRouteView,
       navigatorKey: StackedService.navigatorKey,

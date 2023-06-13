@@ -18,7 +18,7 @@ class AuthenticationService {
     }
   }
 
-  Future<User?> getUser() async {
+  User? getUser() {
     try {
       var user = _firebaseAuth.currentUser;
       return user;

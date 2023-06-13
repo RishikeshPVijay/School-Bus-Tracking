@@ -21,7 +21,10 @@ class BusViewModel extends BaseViewModel {
       case UserType.admin:
         return _firestore.collection(FireStoreCollections.buses).snapshots();
       case UserType.parent:
-        return _firestore.collection(FireStoreCollections.buses).snapshots();
+        return _firestore
+            .collection(FireStoreCollections.buses)
+            .where('parents', arrayContains: user.id)
+            .snapshots();
       default:
         return null;
     }
