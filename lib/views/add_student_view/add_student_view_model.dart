@@ -71,10 +71,7 @@ class AddStudentViewModel extends BaseViewModel implements Initialisable {
       String id = lastStudentDocMap.docs.isNotEmpty
           ? '${int.parse(lastStudentDocMap.docs.last.id) + 1}'
           : '1';
-      var newStudentDoc = await _firestore
-          .collection(FireStoreCollections.students)
-          .doc(id)
-          .set({
+      await _firestore.collection(FireStoreCollections.students).doc(id).set({
         'id': id,
         'name': name,
         'class': cls,
@@ -84,12 +81,12 @@ class AddStudentViewModel extends BaseViewModel implements Initialisable {
         'parent': user!.uid
       });
 
-      await _firestore
-          .collection(FireStoreCollections.buses)
-          .doc(busId)
-          .update({
-        'parents': FieldValue.arrayUnion([user.uid])
-      });
+      // await _firestore
+      //     .collection(FireStoreCollections.buses)
+      //     .doc(busId)
+      //     .update({
+      //   'parents': FieldValue.arrayUnion([user.uid])
+      // });
 
       isNewStudentAdding = false;
       notifyListeners();

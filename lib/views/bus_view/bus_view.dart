@@ -42,8 +42,7 @@ class BusView extends StatelessWidget {
                       ],
                     ),
                   ),
-                getTable(viewModel.getBusDataStream(), user.userType,
-                    screenWidth, isAdmin),
+                getTable(viewModel.getBusDataStream(), screenWidth, isAdmin),
               ],
             );
           },
@@ -55,7 +54,6 @@ class BusView extends StatelessWidget {
 
 Widget getTable(
   Stream<QuerySnapshot<Map<String, dynamic>>>? stream,
-  UserType userType,
   double screenWidth,
   bool isAdmin,
 ) {
@@ -73,8 +71,18 @@ Widget getTable(
         );
       }
       var data = snapshot.data?.docs;
-      if (data == null || data.isEmpty) {
+      if (data == null) {
         return Container();
+      }
+      if (data.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 30.0),
+            child: Text(isAdmin
+                ? 'No buses added'
+                : 'No buses found with verified students added by you.'),
+          ),
+        );
       }
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,

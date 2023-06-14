@@ -143,7 +143,7 @@ void showBusSelectModal(BuildContext context, AddStudentViewModel viewModel) {
         ),
       );
     }
-    List<Bus> busList = [...viewModel.busesList, ...viewModel.busesList];
+    List<Bus> busList = viewModel.busesList;
     if (busList.isEmpty) {
       return const Center(
         child: Text('No buses to show'),

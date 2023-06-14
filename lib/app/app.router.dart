@@ -7,6 +7,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart' as _i11;
 import 'package:flutter/material.dart';
+import 'package:smart_school_bus/models/bus.dart' as _i12;
 import 'package:smart_school_bus/views/add_bus_view/add_bus_view.dart' as _i8;
 import 'package:smart_school_bus/views/add_student_view/add_student_view.dart'
     as _i10;
@@ -19,7 +20,7 @@ import 'package:smart_school_bus/views/map/map_view.dart' as _i6;
 import 'package:smart_school_bus/views/sign_up/sign_up_view.dart' as _i3;
 import 'package:smart_school_bus/views/student_view/student_view.dart' as _i9;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i12;
+import 'package:stacked_services/stacked_services.dart' as _i13;
 
 class Routes {
   static const loginView = '/';
@@ -119,8 +120,9 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i6.MapView: (data) {
+      final args = data.getArgs<MapViewArguments>(nullOk: false);
       return _i11.MaterialPageRoute<dynamic>(
-        builder: (context) => const _i6.MapView(),
+        builder: (context) => _i6.MapView(key: args.key, bus: args.bus),
         settings: data,
       );
     },
@@ -156,7 +158,34 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i12.NavigationService {
+class MapViewArguments {
+  const MapViewArguments({
+    this.key,
+    required this.bus,
+  });
+
+  final _i11.Key? key;
+
+  final _i12.Bus bus;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "bus": "$bus"}';
+  }
+
+  @override
+  bool operator ==(covariant MapViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.bus == bus;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ bus.hashCode;
+  }
+}
+
+extension NavigatorStateExtension on _i13.NavigationService {
   Future<dynamic> navigateToLoginView([
     int? routerId,
     bool preventDuplicates = true,
@@ -213,14 +242,17 @@ extension NavigatorStateExtension on _i12.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToMapView([
+  Future<dynamic> navigateToMapView({
+    _i11.Key? key,
+    required _i12.Bus bus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.mapView,
+        arguments: MapViewArguments(key: key, bus: bus),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -339,14 +371,17 @@ extension NavigatorStateExtension on _i12.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithMapView([
+  Future<dynamic> replaceWithMapView({
+    _i11.Key? key,
+    required _i12.Bus bus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.mapView,
+        arguments: MapViewArguments(key: key, bus: bus),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
