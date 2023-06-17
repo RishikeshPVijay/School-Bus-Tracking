@@ -152,6 +152,7 @@ void showBusSelectModal(BuildContext context, HomeViewModel viewModel) {
                       Bus bus = Bus.fromFirestore(data[index].data());
                       return InkWell(
                         onTap: () {
+                          Navigator.of(context).pop();
                           viewModel.navigateToMapsView(bus);
                         },
                         child: Card(

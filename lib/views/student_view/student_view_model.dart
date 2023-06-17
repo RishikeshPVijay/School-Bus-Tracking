@@ -23,10 +23,7 @@ class StudentViewModel extends BaseViewModel {
   Stream<QuerySnapshot<Map<String, dynamic>>>? getBusDataStream() {
     switch (user.userType) {
       case UserType.admin:
-        return _firestore
-            .collection(FireStoreCollections.students)
-            .where('parent', isEqualTo: user.id)
-            .snapshots();
+        return _firestore.collection(FireStoreCollections.students).snapshots();
       case UserType.parent:
         return _firestore
             .collection(FireStoreCollections.students)
