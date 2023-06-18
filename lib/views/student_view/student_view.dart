@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_school_bus/enums/user_type.dart';
 import 'package:smart_school_bus/models/student.dart';
+import 'package:smart_school_bus/models/student_log.dart';
 import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
 import 'package:smart_school_bus/views/student_view/student_view_model.dart';
 import 'package:smart_school_bus/widgets/loader_button.dart';
@@ -27,20 +29,23 @@ class StudentView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (isParent)
-                  TextButton(
-                    onPressed: viewModel.navigateToAddStudentView,
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.add, size: 20.0),
-                        Text(
-                          'Add Student',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16.0,
+                  SizedBox(
+                    height: 48.0,
+                    child: TextButton(
+                      onPressed: viewModel.navigateToAddStudentView,
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.add, size: 20.0),
+                          Text(
+                            'Add Student',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 16.0,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 getTable(
@@ -59,82 +64,87 @@ Widget getTable(
   StudentViewModel viewModel,
   Size screenSize,
 ) {
-  Widget getDataTable(List<QueryDocumentSnapshot<Map<String, dynamic>>> data,
-      BuildContext context) {
+  final bool isAdmin = viewModel.user.userType == UserType.admin;
+  Widget getDataTable(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> data,
+    BuildContext context,
+  ) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: screenSize.width),
-        child: DataTable(
-          columnSpacing: 5.0,
-          columns: const [
-            DataColumn(label: Text('Name')),
-            DataColumn(label: Text('Verification')),
-            DataColumn(label: Text('Action')),
-          ],
-          rows: data.map((doc) {
-            Student student = Student.fromFirestore(doc.data());
-            return DataRow(
-              cells: [
-                DataCell(Text(student.name)),
-                DataCell(
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: student.rfid != null
-                        ? const Icon(
-                            Icons.verified,
-                            color: Colors.green,
-                          )
-                        : const Icon(
-                            Icons.pending,
-                            color: Colors.redAccent,
-                          ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: screenSize.width),
+          child: DataTable(
+            columnSpacing: 5.0,
+            columns: const [
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Verification')),
+              DataColumn(label: Text('Action')),
+            ],
+            rows: data.map((doc) {
+              Student student = Student.fromFirestore(doc.data());
+              return DataRow(
+                cells: [
+                  DataCell(Text(student.name)),
+                  DataCell(
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: student.rfid != null
+                          ? const Icon(
+                              Icons.verified,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.pending,
+                              color: Colors.redAccent,
+                            ),
+                    ),
                   ),
-                ),
-                DataCell(
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () => viewModel.handleStudentDelete(student),
-                        child: Icon(
-                          Icons.delete,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15.0,
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.remove_red_eye,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      if (student.rfid == null)
-                        const SizedBox(
-                          width: 15.0,
-                        ),
-                      if (student.rfid == null)
+                  DataCell(
+                    Row(
+                      children: [
                         InkWell(
-                          onTap: () {
-                            showAddRFIDBottomSheet(
-                              context,
-                              student,
-                              viewModel,
-                            );
-                          },
+                          onTap: () => viewModel.handleStudentDelete(student),
                           child: Icon(
-                            Icons.edit,
+                            Icons.delete,
                             color: Theme.of(context).primaryColor,
                           ),
                         ),
-                    ],
+                        const SizedBox(
+                          width: 15.0,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.remove_red_eye,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        if (isAdmin && student.rfid == null)
+                          const SizedBox(
+                            width: 15.0,
+                          ),
+                        if (isAdmin && student.rfid == null)
+                          InkWell(
+                            onTap: () {
+                              showAddRFIDModal(
+                                context,
+                                student,
+                                viewModel,
+                              );
+                            },
+                            child: Icon(
+                              Icons.edit,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          }).toList(),
+                ],
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
@@ -154,64 +164,69 @@ Widget getTable(
         );
       }
       var data = snapshot.data?.docs;
-      final bool isAdmin = viewModel.user.userType == UserType.admin;
       if (data == null || data.isEmpty) {
         return const Center(
           child: Text('No students added'),
         );
       }
-      if (isAdmin) {
-        return DefaultTabController(
-          length: 2,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 48,
-                child: TabBar(
-                  tabs: [
-                    Tab(
-                      child: Text('Not verified'),
-                    ),
-                    Tab(
+
+      return DefaultTabController(
+        length: isAdmin ? 3 : 2,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 48,
+              child: TabBar(
+                tabs: [
+                  Tab(
+                    child: Text(isAdmin ? 'Not verified' : 'Student List'),
+                  ),
+                  if (isAdmin)
+                    const Tab(
                       child: Text('Verified'),
                     ),
-                  ],
-                ),
+                  const Tab(
+                    child: Text('Logs'),
+                  ),
+                ],
               ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: screenSize.height -
-                      48 -
-                      (Scaffold.of(context).appBarMaxHeight ?? 0),
-                ),
-                child: TabBarView(
-                  children: [
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: screenSize.height -
+                    48 -
+                    (Scaffold.of(context).appBarMaxHeight ?? 0) -
+                    (isAdmin ? 0 : 48.0),
+              ),
+              child: TabBarView(
+                children: [
+                  if (isAdmin)
                     getDataTable(
                       data
                           .where((element) => element.data()['rfid'] == null)
                           .toList(),
                       context,
                     ),
+                  if (isAdmin)
                     getDataTable(
                       data
                           .where((element) => element.data()['rfid'] != null)
                           .toList(),
                       context,
                     ),
-                  ],
-                ),
+                  if (!isAdmin) getDataTable(data, context),
+                  getStudentLogTable(viewModel, screenSize),
+                ],
               ),
-            ],
-          ),
-        );
-      } else {
-        return getDataTable(data, context);
-      }
+            ),
+          ],
+        ),
+      );
     },
   );
 }
 
-void showAddRFIDBottomSheet(
+void showAddRFIDModal(
   BuildContext context,
   Student student,
   StudentViewModel viewModel,
@@ -251,9 +266,8 @@ void showAddRFIDBottomSheet(
                       Navigator.of(context).pop();
                     });
                   },
-                  trailingIcon: Icons.add,
                   loading: viewModel.isRFIDAdding,
-                  text: 'Add RFID',
+                  text: 'Add',
                 ),
               ],
             ),
@@ -261,5 +275,72 @@ void showAddRFIDBottomSheet(
         ),
       ),
     ),
+  );
+}
+
+Widget getStudentLogTable(StudentViewModel viewModel, Size screenSize) {
+  return StreamBuilder(
+    stream: viewModel.getStudentLogStream(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting ||
+          !snapshot.hasData) {
+        return Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(
+              Theme.of(context).primaryColor,
+            ),
+          ),
+        );
+      }
+      var data = snapshot.data?.docs;
+      if (data == null || data.isEmpty) {
+        return const Center(
+          child: Text('No logs found'),
+        );
+      }
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: screenSize.height -
+              48 -
+              (Scaffold.of(context).appBarMaxHeight ?? 0),
+        ),
+        child: SingleChildScrollView(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minWidth: screenSize.width),
+              child: DataTable(
+                columnSpacing: 5.0,
+                columns: const [
+                  DataColumn(label: Text('Student')),
+                  DataColumn(label: Text('Class')),
+                  DataColumn(label: Text('Status')),
+                  DataColumn(label: Text('Date/Time')),
+                ],
+                rows: data.map((doc) {
+                  StudentLog student = StudentLog.fromFirestore(doc.data());
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(student.name)),
+                      DataCell(Text(student.cls)),
+                      DataCell(Text(student.status)),
+                      DataCell(
+                        Column(
+                          children: [
+                            Text(
+                              '${DateFormat('hh:mma').format(student.createdAt)}\n${DateFormat('dd-MM-yyyy').format(student.createdAt)}',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+      );
+    },
   );
 }

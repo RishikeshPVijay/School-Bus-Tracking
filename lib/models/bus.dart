@@ -5,12 +5,13 @@ class Bus {
   final String driver;
   final List<dynamic>? parents; // it's List<String>, but causing error
 
-  Bus(
-      {required this.id,
-      required this.driver,
-      required this.busNo,
-      required this.route,
-      this.parents});
+  Bus({
+    required this.id,
+    required this.driver,
+    required this.busNo,
+    required this.route,
+    this.parents,
+  });
 
   Bus.fromFirestore(Map<String, dynamic> json)
       : id = json['id'],

@@ -18,8 +18,6 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('here');
-    print(Theme.of(context).primaryColor);
     return ViewModelBuilder.reactive(
       onViewModelReady: (viewModel) {
         viewModel.bus = bus;

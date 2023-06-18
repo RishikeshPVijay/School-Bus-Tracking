@@ -3,4 +3,5 @@ class FireStoreCollections {
   static String buses = 'buses';
   static String students = 'students';
   static String locations = 'locations';
+  static String studentLogs = 'student-logs';
 }

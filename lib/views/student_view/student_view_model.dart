@@ -37,6 +37,22 @@ class StudentViewModel extends BaseViewModel {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>>? getStudentLogStream() {
+    switch (user.userType) {
+      case UserType.admin:
+        return _firestore
+            .collection(FireStoreCollections.studentLogs)
+            .snapshots();
+      case UserType.parent:
+        return _firestore
+            .collection(FireStoreCollections.studentLogs)
+            .where('parent', isEqualTo: user.id)
+            .snapshots();
+      default:
+        return null;
+    }
+  }
+
   void handleStudentDelete(Student student) async {
     try {
       DialogResponse<dynamic>? dialogResponse = await _dialogService.showDialog(
