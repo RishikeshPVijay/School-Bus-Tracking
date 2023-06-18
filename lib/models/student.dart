@@ -5,6 +5,7 @@ class Student {
   final String cls;
   final String admissionNumber;
   final String address;
+  final String parent;
   final String? rfid;
 
   Student({
@@ -14,6 +15,7 @@ class Student {
     required this.cls,
     required this.admissionNumber,
     required this.address,
+    required this.parent,
     this.rfid,
   });
 
@@ -24,5 +26,6 @@ class Student {
         admissionNumber = json['admissionNumber'],
         address = json['address'],
         cls = json['class'],
+        parent = json['parent'],
         rfid = json['rfid'];
 }

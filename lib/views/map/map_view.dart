@@ -18,8 +18,13 @@ class MapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('here');
+    print(Theme.of(context).primaryColor);
     return ViewModelBuilder.reactive(
-      onViewModelReady: (viewModel) => viewModel.bus = bus,
+      onViewModelReady: (viewModel) {
+        viewModel.bus = bus;
+        viewModel.updateMarkerIcon();
+      },
       viewModelBuilder: () => MapViewModel(),
       builder: (context, viewModel, child) {
         return SSBDashboardPageWithUser(
@@ -29,7 +34,9 @@ class MapView extends StatelessWidget {
               stream: viewModel.getBusLocationStream(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting ||
-                    !snapshot.hasData) {
+                        !snapshot.hasData
+                    // !viewModel.isMarkerIconSet
+                    ) {
                   return Center(
                     child: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation(

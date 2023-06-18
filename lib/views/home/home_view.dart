@@ -30,7 +30,7 @@ class HomeView extends StatelessWidget {
                     shrinkWrap: true,
                     children: [
                       getGridItem(
-                        title: 'Map',
+                        title: 'Location',
                         color: const Color.fromRGBO(237, 193, 196, 1.0),
                         assetImage: const AssetImage('images/maps.png'),
                         onTap: () {
