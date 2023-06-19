@@ -5,11 +5,13 @@ class SSBUser {
   final String name;
   final String email;
   final UserType userType;
+  final String? token;
 
   SSBUser({
     required this.id,
     required this.name,
     required this.email,
     required this.userType,
+    this.token,
   });
 }

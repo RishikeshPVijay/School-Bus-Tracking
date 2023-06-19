@@ -1,6 +1,6 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_school_bus/app/locator.dart';
+import 'package:smart_school_bus/app/notification.dart';
 import 'package:smart_school_bus/app/setup_snackbar_ui.dart';
 import 'package:stacked_services/stacked_services.dart';
 import './app/app.router.dart';
@@ -12,7 +12,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseMessaging.instance.getInitialMessage();
+  loadFCM();
+  listenFCM();
   configureDependencies();
   setupSnackbarUi();
   runApp(const MyApp());
