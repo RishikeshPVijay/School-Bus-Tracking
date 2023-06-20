@@ -10,6 +10,7 @@ class SSBDashboardPageWithUser extends StatelessWidget {
   final Widget Function(SSBUser user) builder;
   final String? appBarTitle;
   final bool isPadded;
+  final bool showLogoutButton;
   final Color backgroundColor;
   SSBDashboardPageWithUser({
     Key? key,
@@ -17,6 +18,7 @@ class SSBDashboardPageWithUser extends StatelessWidget {
     this.appBarTitle,
     this.isPadded = true,
     this.backgroundColor = const Color.fromRGBO(249, 250, 252, 1.0),
+    this.showLogoutButton = false,
   }) : super(key: key);
 
   static final AuthenticationService _authenticationService =
@@ -98,6 +100,20 @@ class SSBDashboardPageWithUser extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: showLogoutButton
+          ? TextButton(
+              onPressed: logout,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Logout'),
+                  Icon(Icons.logout, size: 32.0),
+                ],
+              ),
+            )
+          : null,
+      floatingActionButtonLocation:
+          showLogoutButton ? FloatingActionButtonLocation.centerDocked : null,
     );
   }
 }

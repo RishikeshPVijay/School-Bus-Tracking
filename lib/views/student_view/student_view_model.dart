@@ -100,4 +100,11 @@ class StudentViewModel extends BaseViewModel {
     isRFIDAdding = false;
     notifyListeners();
   }
+
+  void naivgateToStudentDetails(Student student) {
+    _navigationService.navigateTo(
+      Routes.studentDetailedView,
+      arguments: StudentDetailedViewArguments(student: student),
+    );
+  }
 }

@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:smart_school_bus/models/bus.dart';
 import 'package:smart_school_bus/models/location.dart';
 import 'package:smart_school_bus/pages/ssb_dashboard_page_with_user.dart';
@@ -56,21 +55,37 @@ class MapView extends StatelessWidget {
                   constraints: BoxConstraints(
                     maxHeight: MediaQuery.of(context).size.height,
                   ),
-                  child: GoogleMap(
-                    onMapCreated: (controller) {
-                      viewModel.mapController = controller;
-                    },
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(location.lat, location.lng),
-                      zoom: viewModel.zoom,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId("marker2"),
-                        position: LatLng(location.lat, location.lng),
-                        icon: viewModel.markerIcon,
+                  child: Stack(
+                    children: [
+                      GoogleMap(
+                        onMapCreated: (controller) {
+                          viewModel.mapController = controller;
+                        },
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(location.lat, location.lng),
+                          zoom: viewModel.zoom,
+                        ),
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId("marker2"),
+                            position: LatLng(location.lat, location.lng),
+                            icon: viewModel.markerIcon,
+                          ),
+                        },
                       ),
-                    },
+                      Positioned(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Last updated: ${Jiffy.parseFromDateTime(location.createdAt).fromNow()}',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }),

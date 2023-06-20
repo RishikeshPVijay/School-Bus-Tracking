@@ -114,7 +114,8 @@ Widget getTable(
                           width: 15.0,
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () =>
+                              viewModel.naivgateToStudentDetails(student),
                           child: Icon(
                             Icons.remove_red_eye,
                             color: Theme.of(context).primaryColor,

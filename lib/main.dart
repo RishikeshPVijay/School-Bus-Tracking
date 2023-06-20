@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.white,
         ),
+        cardColor: Colors.white,
       ),
       initialRoute: Routes.initialRouteView,
       navigatorKey: StackedService.navigatorKey,

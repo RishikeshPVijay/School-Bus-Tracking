@@ -42,7 +42,8 @@ class BusView extends StatelessWidget {
                       ],
                     ),
                   ),
-                getTable(viewModel.getBusDataStream(), screenWidth, isAdmin),
+                getTable(viewModel.getBusDataStream(), screenWidth, isAdmin,
+                    viewModel),
               ],
             );
           },
@@ -52,11 +53,8 @@ class BusView extends StatelessWidget {
   }
 }
 
-Widget getTable(
-  Stream<QuerySnapshot<Map<String, dynamic>>>? stream,
-  double screenWidth,
-  bool isAdmin,
-) {
+Widget getTable(Stream<QuerySnapshot<Map<String, dynamic>>>? stream,
+    double screenWidth, bool isAdmin, BusViewModel viewModel) {
   return StreamBuilder(
     stream: stream,
     builder: (context, snapshot) {
@@ -117,7 +115,7 @@ Widget getTable(
                         //   width: 15.0,
                         // ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () => viewModel.navigateToBusDetailedView(bus),
                           child: Icon(
                             Icons.remove_red_eye,
                             color: Theme.of(context).primaryColor,

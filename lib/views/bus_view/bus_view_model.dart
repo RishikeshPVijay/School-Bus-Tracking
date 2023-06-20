@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_school_bus/app/app.router.dart';
 import 'package:smart_school_bus/app/locator.dart';
 import 'package:smart_school_bus/enums/user_type.dart';
+import 'package:smart_school_bus/models/bus.dart';
 import 'package:smart_school_bus/models/firestore_collections.dart';
 import 'package:smart_school_bus/models/ssb_user.dart';
 import 'package:stacked/stacked.dart';
@@ -28,5 +29,12 @@ class BusViewModel extends BaseViewModel {
       default:
         return null;
     }
+  }
+
+  void navigateToBusDetailedView(Bus bus) {
+    _navigationService.navigateTo(
+      Routes.busDetailedView,
+      arguments: BusDetailedViewArguments(bus: bus),
+    );
   }
 }

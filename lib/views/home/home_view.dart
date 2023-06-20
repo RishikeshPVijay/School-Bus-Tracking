@@ -10,49 +10,120 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
     return SSBDashboardPageWithUser(
-      // appBarTitle: "Hello, ${userData?['name']}",
+      showLogoutButton: isPortrait,
       appBarTitle: 'Smart School Bus',
       builder: (user) => ViewModelBuilder.reactive(
           onViewModelReady: (viewModel) => viewModel.user = user,
           viewModelBuilder: () => HomeViewModel(),
           builder: (context, model, child) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Card(
-                elevation: 2,
-                clipBehavior: Clip.hardEdge,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    shrinkWrap: true,
+            return ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      getGridItem(
-                        title: 'Location',
-                        color: const Color.fromRGBO(237, 193, 196, 1.0),
-                        assetImage: const AssetImage('images/maps.png'),
-                        onTap: () {
-                          showBusSelectModal(context, model);
-                        },
+                      Card(
+                        elevation: 2,
+                        clipBehavior: Clip.hardEdge,
+                        child: Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 60.0,
+                                child: SizedBox(
+                                  height: 80,
+                                  child: Image.asset('images/user.png'),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 16.0,
+                              ),
+                              Text(
+                                user.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              Text(
+                                user.email,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8.0,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                      getGridItem(
-                        title: 'Bus',
-                        color: const Color.fromRGBO(243, 235, 188, 1.0),
-                        assetImage: const AssetImage('images/bus.png'),
-                        onTap: () {
-                          model.navigateToBusView();
-                        },
+                      const SizedBox(
+                        height: 24.0,
                       ),
-                      getGridItem(
-                        title: 'Student',
-                        color: const Color.fromRGBO(197, 233, 255, 1.0),
-                        assetImage: const AssetImage('images/student.png'),
-                        onTap: () {
-                          model.navigateToStudentView();
-                        },
+                      Card(
+                        elevation: 2,
+                        clipBehavior: Clip.hardEdge,
+                        child: Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: GridView.count(
+                            crossAxisCount: 3,
+                            shrinkWrap: true,
+                            children: [
+                              getGridItem(
+                                title: 'Location',
+                                color: const Color.fromRGBO(237, 193, 196, 1.0),
+                                assetImage: const AssetImage('images/maps.png'),
+                                onTap: () {
+                                  showBusSelectModal(context, model);
+                                },
+                              ),
+                              getGridItem(
+                                title: 'Bus',
+                                color: const Color.fromRGBO(243, 235, 188, 1.0),
+                                assetImage: const AssetImage('images/bus.png'),
+                                onTap: () {
+                                  model.navigateToBusView();
+                                },
+                              ),
+                              getGridItem(
+                                title: 'Student',
+                                color: const Color.fromRGBO(197, 233, 255, 1.0),
+                                assetImage:
+                                    const AssetImage('images/student.png'),
+                                onTap: () {
+                                  model.navigateToStudentView();
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
+                      // Expanded(child: Container()),
+                      const SizedBox(
+                        height: 32.0,
+                      ),
+                      if (!isPortrait)
+                        TextButton(
+                          onPressed: () => model.logout(),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Logout'),
+                              Icon(Icons.logout, size: 32.0),
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 ),

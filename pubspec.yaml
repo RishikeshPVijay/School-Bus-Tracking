@@ -46,6 +46,7 @@ dependencies:
   firebase_messaging: ^14.6.3
   intl: ^0.18.1
   flutter_local_notifications: ^14.1.1
+  jiffy: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
     - images/driver.png
     - images/student.png
     - images/map_marker.png
+    - images/user.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
