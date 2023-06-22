@@ -14,6 +14,6 @@ class Location {
   Location.fromFirestore(Map<String, dynamic> json)
       : busId = json['busId'],
         createdAt = json['createdAt'].toDate(),
-        lat = json['lat'],
-        lng = json['lng'];
+        lat = double.tryParse("${json['lat']}") ?? 0,
+        lng = double.tryParse("${json['lng']}") ?? 0;
 }

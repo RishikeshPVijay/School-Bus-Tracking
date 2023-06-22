@@ -42,11 +42,13 @@ class StudentViewModel extends BaseViewModel {
       case UserType.admin:
         return _firestore
             .collection(FireStoreCollections.studentLogs)
+            .orderBy('createdAt', descending: true)
             .snapshots();
       case UserType.parent:
         return _firestore
             .collection(FireStoreCollections.studentLogs)
             .where('parent', isEqualTo: user.id)
+            .orderBy('createdAt', descending: true)
             .snapshots();
       default:
         return null;

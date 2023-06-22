@@ -33,8 +33,8 @@ class StudentLog {
         cls = json['class'],
         parent = json['parent'],
         status = json['status'],
-        lat = json['lat'],
-        lng = json['lng'],
+        lat = double.tryParse("${json['lat']}") ?? 0,
+        lng = double.tryParse("${json['lng']}") ?? 0,
         createdAt = json['createdAt'].toDate(),
         busNo = json['busNo'];
 }
